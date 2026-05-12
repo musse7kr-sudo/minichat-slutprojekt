@@ -1,139 +1,222 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #eeeeee;
-    color: #222222;
+    font-family: Verdana, Arial, sans-serif;
+    background-color: #dfeaf2;
+    color: #222;
 }
 
 .container {
-    width: 800px;
-    margin: 40px auto;
-    background-color: white;
-    padding: 20px;
-    border: 1px solid #cccccc;
+    width: 88%;
+    max-width: 850px;
+    margin: 35px auto;
+    background-color: #fffdf8;
+    padding: 25px;
+    border-radius: 12px;
+    border: 2px solid #c8d6df;
 }
 
 h1, h2, h3 {
     text-align: center;
+    color: #17324d;
+    letter-spacing: 1px;
+}
+
+h1 {
+    font-size: 32px;
+}
+
+h2 {
+    font-size: 28px;
 }
 
 p {
     font-size: 16px;
+    line-height: 1.5;
 }
 
 a {
-    color: blue;
+    color: #235789;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 .btn,
 button {
-    background-color: #2b6fd6;
+    background-color: #235789;
     color: white;
-    padding: 10px 15px;
     border: none;
+    padding: 11px 17px;
+    border-radius: 5px;
+    cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    margin: 5px;
-    cursor: pointer;
+    margin: 6px;
+    font-size: 15px;
 }
 
 .btn:hover,
 button:hover {
-    background-color: #1f55a8;
+    background-color: #17324d;
+    text-decoration: none;
 }
 
 .logout {
-    background-color: #c0392b;
+    background-color: #b23a48;
+}
+
+.logout:hover {
+    background-color: #842832;
 }
 
 form {
-    margin-top: 15px;
+    margin-top: 18px;
 }
 
 input,
 textarea {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #999999;
+    padding: 11px;
+    margin-bottom: 13px;
+    border: 2px solid #c8d6df;
+    border-radius: 5px;
     font-size: 15px;
+    background-color: #f7fbff;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: #235789;
+    background-color: white;
 }
 
 textarea {
-    height: 100px;
+    min-height: 105px;
+    resize: vertical;
 }
 
 .profile-card,
 .user-card {
-    background-color: #f5f5f5;
-    border: 1px solid #cccccc;
-    padding: 15px;
-    margin-bottom: 15px;
+    background-color: #f7fbff;
+    border-left: 6px solid #235789;
+    padding: 17px;
+    margin: 17px 0;
+    border-radius: 6px;
+}
+
+.profile-card h3,
+.user-card h3 {
+    margin-top: 0;
+}
+
+.profile-card p,
+.user-card p {
+    text-align: center;
+}
+
+.user-card:hover {
+    background-color: #eef6fc;
 }
 
 .chat-box {
-    height: 350px;
-    overflow-y: scroll;
-    border: 1px solid #cccccc;
-    background-color: #fafafa;
-    padding: 10px;
+    height: 360px;
+    overflow-y: auto;
+    background-color: #f7fbff;
+    border: 2px solid #c8d6df;
+    padding: 15px;
+    border-radius: 8px;
     margin-bottom: 15px;
 }
 
 .message {
-    width: 60%;
-    padding: 10px;
-    margin-bottom: 10px;
+    max-width: 72%;
+    padding: 11px 13px;
+    margin: 12px 0;
+    border-radius: 10px;
+    word-wrap: break-word;
 }
 
 .mine {
-    background-color: #2b6fd6;
+    background-color: #235789;
     color: white;
     margin-left: auto;
+    border-top-right-radius: 0;
 }
 
 .theirs {
-    background-color: #dddddd;
-    color: black;
+    background-color: #e6e0d4;
+    color: #222;
     margin-right: auto;
+    border-top-left-radius: 0;
 }
 
 .message p {
-    margin: 0;
+    margin: 0 0 6px 0;
+    text-align: left;
     color: inherit;
 }
 
 .message small {
     display: block;
-    margin-top: 5px;
     font-size: 12px;
+    opacity: 0.75;
 }
 
 .delete-message {
-    color: white;
-    font-size: 12px;
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #ffe5e5;
 }
 
 .success {
-    background-color: #d4edda;
-    color: #155724;
+    background-color: #d9f0dd;
+    color: #215c2e;
     padding: 10px;
+    border-radius: 6px;
     text-align: center;
+    border: 1px solid #9dccaa;
 }
 
 .error {
-    background-color: #f8d7da;
-    color: #721c24;
+    background-color: #ffdada;
+    color: #7a1f1f;
     padding: 10px;
+    border-radius: 6px;
     text-align: center;
+    border: 1px solid #d38c8c;
 }
 
-@media screen and (max-width: 850px) {
+@media screen and (max-width: 600px) {
     .container {
         width: 95%;
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    h2 {
+        font-size: 23px;
     }
 
     .message {
-        width: 80%;
+        max-width: 90%;
+    }
+
+    .btn,
+    button {
+        width: 100%;
+        text-align: center;
+        margin: 5px 0;
     }
 }
