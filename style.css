@@ -268,3 +268,51 @@ textarea {
     font-size: 14px;
     margin: 0;
 }
+.users-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.user-card-small {
+    background-color: #f7fbff;
+    border: 2px solid #c8d6df;
+    border-radius: 10px;
+    padding: 15px 10px;
+    text-align: center;
+}
+
+.user-icon {
+    width: 55px;
+    height: 55px;
+    background-color: #235789;
+    color: white;
+    border-radius: 15px;
+    margin: 0 auto 10px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.user-card-small h3 {
+    font-size: 17px;
+    margin: 8px 0;
+    word-break: break-word;
+}
+
+.user-card-small p {
+    font-size: 13px;
+    height: 35px;
+    overflow: hidden;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.small-btn {
+    padding: 8px 10px;
+    font-size: 14px;
+    margin: 0;
+}
