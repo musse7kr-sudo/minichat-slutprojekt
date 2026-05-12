@@ -86,7 +86,7 @@ $messages = $stmt->get_result();
     </div>
 
     <form method="POST" action="send_message.php">
-        <input type="hidden" name="receiver_id" value="<?php echo $other_user; ?>">
+        <input type="hidden" name="receiver_id" value="<?php echo htmlspecialchars($other_user); ?>">
         <textarea name="message" placeholder="Skriv ett meddelande..." required></textarea>
         <button type="submit">Skicka</button>
     </form>
@@ -94,6 +94,14 @@ $messages = $stmt->get_result();
     <a href="users.php" class="btn">Tillbaka</a>
     <a href="profile.php" class="btn">Min profil</a>
 </div>
+
+<script>
+    const chatBox = document.querySelector(".chat-box");
+
+    if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
 
 </body>
 </html>
