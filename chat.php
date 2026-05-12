@@ -46,9 +46,7 @@ $chat_user = $user_result->fetch_assoc();
 <div class="container">
     <h2>Chatt med <?php echo htmlspecialchars($chat_user["username"]); ?></h2>
 
-    <div class="chat-box" id="chatBox">
-        
-    </div>
+    <div class="chat-box" id="chatBox"></div>
 
     <form id="messageForm">
         <input type="hidden" name="receiver_id" value="<?php echo htmlspecialchars($other_user); ?>">
@@ -66,12 +64,38 @@ $chat_user = $user_result->fetch_assoc();
     const messageInput = document.getElementById("messageInput");
     const otherUser = <?php echo $other_user; ?>;
 
-    function loadMessages() {
+    let firstLoad = true;
+    let lastMessageCount = 0;
+
+    function isNearBottom() {
+        return chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight < 80;
+    }
+
+    function scrollToBottom() {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function countMessages() {
+        return chatBox.querySelectorAll(".message").length;
+    }
+
+    function loadMessages(shouldForceScroll = false) {
+        const wasNearBottom = isNearBottom();
+
         fetch("get_messages.php?user_id=" + otherUser)
             .then(response => response.text())
             .then(data => {
                 chatBox.innerHTML = data;
-                chatBox.scrollTop = chatBox.scrollHeight;
+
+                const newMessageCount = countMessages();
+                const hasNewMessage = newMessageCount > lastMessageCount;
+
+                if (firstLoad || shouldForceScroll || (hasNewMessage && wasNearBottom)) {
+                    scrollToBottom();
+                }
+
+                firstLoad = false;
+                lastMessageCount = newMessageCount;
             });
     }
 
@@ -87,13 +111,12 @@ $chat_user = $user_result->fetch_assoc();
         .then(response => response.text())
         .then(data => {
             messageInput.value = "";
-            loadMessages();
+            loadMessages(true);
         });
     });
 
-    loadMessages();
-
-    setInterval(loadMessages, 2000);
+    loadMessages(true);
+    setInterval(() => loadMessages(false), 2000);
 </script>
 
 </body>
