@@ -41,23 +41,21 @@ $chat_user = $user_result->fetch_assoc();
     <title>Chatt</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="chat-page">
+<body>
 
-<div class="chat-container">
+<div class="container">
     <h2>Chatt med <?php echo htmlspecialchars($chat_user["username"]); ?></h2>
 
     <div class="chat-box" id="chatBox"></div>
 
-    <form id="messageForm" class="chat-form">
+    <form id="messageForm">
         <input type="hidden" name="receiver_id" value="<?php echo htmlspecialchars($other_user); ?>">
         <textarea name="message" id="messageInput" placeholder="Skriv ett meddelande..." required></textarea>
         <button type="submit">Skicka</button>
     </form>
 
-    <div class="chat-links">
-        <a href="users.php" class="btn">Tillbaka</a>
-        <a href="profile.php" class="btn">Min profil</a>
-    </div>
+    <a href="users.php" class="btn">Tillbaka</a>
+    <a href="profile.php" class="btn">Min profil</a>
 </div>
 
 <script>
