@@ -8,14 +8,28 @@ if (!isset($_SESSION["user_id"])) {
 }
 
 $user_id = $_SESSION["user_id"];
+$message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST["username"];
+    $full_name = $_POST["full_name"];
+    $age = $_POST["age"];
     $bio = $_POST["bio"];
 
-    $sql = "UPDATE users SET bio = ? WHERE id = ?";
+    if (empty($age)) {
+        $age = NULL;
+    }
+
+    $sql = "UPDATE users SET username = ?, full_name = ?, age = ?, bio = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("si", $bio, $user_id);
-    $stmt->execute();
+    $stmt->bind_param("ssisi", $username, $full_name, $age, $bio, $user_id);
+
+    if ($stmt->execute()) {
+        $_SESSION["username"] = $username;
+        $message = "Profilen har uppdaterats!";
+    } else {
+        $message = "Något gick fel.";
+    }
 }
 
 $sql = "SELECT * FROM users WHERE id = ?";
@@ -39,17 +53,58 @@ $user = $result->fetch_assoc();
 <div class="container">
     <h2>Min profil</h2>
 
+    <?php if (!empty($message)): ?>
+        <p class="success"><?php echo htmlspecialchars($message); ?></p>
+    <?php endif; ?>
+
     <div class="profile-card">
         <h3><?php echo htmlspecialchars($user["username"]); ?></h3>
-        <p><strong>E-post:</strong> <?php echo htmlspecialchars($user["email"]); ?></p>
-        <p><strong>Om mig:</strong> <?php echo htmlspecialchars($user["bio"]); ?></p>
+
+        <p><strong>Namn:</strong> 
+            <?php echo htmlspecialchars($user["full_name"]); ?>
+        </p>
+
+        <p><strong>E-post:</strong> 
+            <?php echo htmlspecialchars($user["email"]); ?>
+        </p>
+
+        <p><strong>Ålder:</strong> 
+            <?php echo htmlspecialchars($user["age"]); ?>
+        </p>
+
+        <p><strong>Om mig:</strong> 
+            <?php echo htmlspecialchars($user["bio"]); ?>
+        </p>
     </div>
 
-    <h3>Ändra profiltext</h3>
+    <h3>Redigera profil</h3>
 
     <form method="POST">
+        <input 
+            type="text" 
+            name="username" 
+            placeholder="Användarnamn"
+            value="<?php echo htmlspecialchars($user["username"]); ?>" 
+            required
+        >
+
+        <input 
+            type="text" 
+            name="full_name" 
+            placeholder="Ditt namn"
+            value="<?php echo htmlspecialchars($user["full_name"]); ?>"
+        >
+
+        <input 
+            type="number" 
+            name="age" 
+            placeholder="Ålder"
+            value="<?php echo htmlspecialchars($user["age"]); ?>"
+        >
+
         <textarea name="bio" placeholder="Skriv något om dig..."><?php echo htmlspecialchars($user["bio"]); ?></textarea>
-        <button type="submit">Spara</button>
+
+        <button type="submit">Spara ändringar</button>
     </form>
 
     <br>
