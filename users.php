@@ -9,7 +9,7 @@ if (!isset($_SESSION["user_id"])) {
 
 $current_user = $_SESSION["user_id"];
 
-$sql = "SELECT * FROM users WHERE id != ?";
+$sql = "SELECT * FROM users WHERE id != ? ORDER BY username ASC";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $current_user);
 $stmt->execute();
@@ -29,13 +29,31 @@ $result = $stmt->get_result();
 <div class="container">
     <h2>Alla användare</h2>
 
-    <?php while ($user = $result->fetch_assoc()): ?>
-        <div class="user-card">
-            <h3><?php echo htmlspecialchars($user["username"]); ?></h3>
-            <p><?php echo htmlspecialchars($user["bio"]); ?></p>
-            <a href="chat.php?user_id=<?php echo $user["id"]; ?>" class="btn">Chatta</a>
-        </div>
-    <?php endwhile; ?>
+    <div class="users-grid">
+        <?php while ($user = $result->fetch_assoc()): ?>
+            <div class="user-card-small">
+                <div class="user-icon">
+                    <?php echo strtoupper(substr($user["username"], 0, 1)); ?>
+                </div>
+
+                <h3><?php echo htmlspecialchars($user["username"]); ?></h3>
+
+                <p>
+                    <?php 
+                    if (!empty($user["bio"])) {
+                        echo htmlspecialchars($user["bio"]);
+                    } else {
+                        echo "Ingen profiltext";
+                    }
+                    ?>
+                </p>
+
+                <a href="chat.php?user_id=<?php echo $user["id"]; ?>" class="btn small-btn">Chatta</a>
+            </div>
+        <?php endwhile; ?>
+    </div>
+
+    <br>
 
     <a href="profile.php" class="btn">Tillbaka till profil</a>
 </div>
