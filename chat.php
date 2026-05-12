@@ -13,7 +13,7 @@ if (!isset($_GET["user_id"])) {
 }
 
 $current_user = $_SESSION["user_id"];
-$other_user = $_GET["user_id"];
+$other_user = (int)$_GET["user_id"];
 
 if ($other_user == $current_user) {
     header("Location: users.php");
@@ -32,17 +32,6 @@ if ($user_result->num_rows == 0) {
 }
 
 $chat_user = $user_result->fetch_assoc();
-
-$sql = "SELECT * FROM messages 
-        WHERE (sender_id = ? AND receiver_id = ?)
-        OR (sender_id = ? AND receiver_id = ?)
-        ORDER BY created_at ASC";
-
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("iiii", $current_user, $other_user, $other_user, $current_user);
-$stmt->execute();
-
-$messages = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -57,37 +46,13 @@ $messages = $stmt->get_result();
 <div class="container">
     <h2>Chatt med <?php echo htmlspecialchars($chat_user["username"]); ?></h2>
 
-    <div class="chat-box">
-        <?php if ($messages->num_rows == 0): ?>
-            <p>Inga meddelanden ännu. Skriv första meddelandet!</p>
-        <?php endif; ?>
-
-        <?php while ($msg = $messages->fetch_assoc()): ?>
-            <?php if ($msg["sender_id"] == $current_user): ?>
-                <div class="message mine">
-                    <p><?php echo htmlspecialchars($msg["message"]); ?></p>
-                    <small><?php echo date("H:i", strtotime($msg["created_at"])); ?></small>
-
-                    <a 
-                        href="delete_message.php?id=<?php echo $msg["id"]; ?>&chat_user=<?php echo $other_user; ?>" 
-                        class="delete-message"
-                        onclick="return confirm('Vill du radera meddelandet?');"
-                    >
-                        Radera
-                    </a>
-                </div>
-            <?php else: ?>
-                <div class="message theirs">
-                    <p><?php echo htmlspecialchars($msg["message"]); ?></p>
-                    <small><?php echo date("H:i", strtotime($msg["created_at"])); ?></small>
-                </div>
-            <?php endif; ?>
-        <?php endwhile; ?>
+    <div class="chat-box" id="chatBox">
+        
     </div>
 
-    <form method="POST" action="send_message.php">
+    <form id="messageForm">
         <input type="hidden" name="receiver_id" value="<?php echo htmlspecialchars($other_user); ?>">
-        <textarea name="message" placeholder="Skriv ett meddelande..." required></textarea>
+        <textarea name="message" id="messageInput" placeholder="Skriv ett meddelande..." required></textarea>
         <button type="submit">Skicka</button>
     </form>
 
@@ -96,11 +61,39 @@ $messages = $stmt->get_result();
 </div>
 
 <script>
-    const chatBox = document.querySelector(".chat-box");
+    const chatBox = document.getElementById("chatBox");
+    const messageForm = document.getElementById("messageForm");
+    const messageInput = document.getElementById("messageInput");
+    const otherUser = <?php echo $other_user; ?>;
 
-    if (chatBox) {
-        chatBox.scrollTop = chatBox.scrollHeight;
+    function loadMessages() {
+        fetch("get_messages.php?user_id=" + otherUser)
+            .then(response => response.text())
+            .then(data => {
+                chatBox.innerHTML = data;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
     }
+
+    messageForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(messageForm);
+
+        fetch("send_message.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            messageInput.value = "";
+            loadMessages();
+        });
+    });
+
+    loadMessages();
+
+    setInterval(loadMessages, 2000);
 </script>
 
 </body>
